@@ -2,9 +2,9 @@ version: 2
 jobs:
   build:
     docker:
-      - image: adoptopenjdk/openjdk8
+      - image: circleci/openjdk:8-jdk
 
-    working_directory: ~/demo
+    working_directory: ~/circleci-test
     
     steps:
       # git pull
@@ -12,31 +12,33 @@ jobs:
 
       # setup testing env
       - setup_remote_docker:
-          docker_layer_caching: true
       - run:
           name: Login to DockerHub
-          command: docker login -u ppawave -p Gnaopa199258$!
+          command: docker login -u 'ppawave' -p 'Gnaopa199258$!'
+      
 
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - demo-{{ checksum "pom.xml" }}
+          - sample-{{ checksum "pom.xml" }}
 
       - run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
-          key: demo-{{ checksum "pom.xml" }}
+          key: sample-{{ checksum "pom.xml" }}
         
       # package into a jar
       - run: mvn clean package
 
       # build and push docker image to docker hub
-      - run: mvn clean compile jib:build -Dimage=ppawave/demo:1.0.0
+      - run: mvn clean compile com.google.cloud.tools:jib-maven-plugin:2.5.0:build -Dimage=ppawave/circleci-test:1.0.0
 
       # store raw contents of src code
       - store_artifacts:
-          path: target/classes
-          destination: demo
+          path: target/
+          destination: sample
+      - store_test_results:
+          path: target/
 
