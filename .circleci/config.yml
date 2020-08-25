@@ -38,7 +38,6 @@ jobs:
       - run:
           name: Build application Docker image
           command: |
-              cp target/*.jar docker/apps/
                     docker login -u 'kophyo1992@icloud.com' -p 'Gnaopa199258$!' ppa-ppa-docker-local
                     docker build --no-cache -t ppa-ppa-docker-local/test/circleci-test:circleci-test docker
                     docker push ppa-ppa-docker-local/test/circleci-test:circleci-test
