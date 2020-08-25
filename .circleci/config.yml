@@ -11,10 +11,10 @@ jobs:
       - checkout
 
       # setup testing env
-      - setup_remote_docker:
-      - run:
-          name: Login to DockerHub
-          command: docker login -u 'kophyo1992@icloud.com' -p 'Gnaopa199258$!' ppa-ppa-docker-local.jfrog.io
+      #- setup_remote_docker:
+      #- run:
+       #   name: Login to DockerHub
+        #  command: docker login -u 'ppawave' -p 'Gnaopa199258$!'
       
 
       # Download and cache dependencies
@@ -30,10 +30,18 @@ jobs:
           key: sample-{{ checksum "pom.xml" }}
         
       # package into a jar
-      - run: mvn clean package
+      #- run: mvn clean package
 
       # build and push docker image to docker hub
-      - run: mvn clean compile com.google.cloud.tools:jib-maven-plugin:2.5.0:build -Dimage=ppa-ppa-docker-local/circleci-test:1.0.0
+      #- run: mvn clean compile com.google.cloud.tools:jib-maven-plugin:2.5.0:build -Dimage=ppawave/circleci-test:1.0.0
+
+      - run:
+          name: Build application Docker image
+          command: |
+              cp target/*.jar docker/apps/
+                    docker login -u 'kophyo1992@icloud.com' -p 'Gnaopa199258$!' ppa-ppa-docker-local
+                    docker build --no-cache -t ppa-ppa-docker-local/test/circleci-test:circleci-test docker
+                    docker push ppa-ppa-docker-local/test/circleci-test:circleci-test
 
       # store raw contents of src code
       - store_artifacts:
