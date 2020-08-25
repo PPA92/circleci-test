@@ -14,7 +14,7 @@ jobs:
       - setup_remote_docker:
       - run:
           name: Login to DockerHub
-          command: docker login -u 'ppawave' -p 'Gnaopa199258$!'
+          command: docker login -u 'kophyo1992@icloud.com' -p 'Gnaopa199258$!' ppa-ppa-docker-local.jfrog.io
       
 
       # Download and cache dependencies
@@ -33,7 +33,7 @@ jobs:
       - run: mvn clean package
 
       # build and push docker image to docker hub
-      - run: mvn clean compile com.google.cloud.tools:jib-maven-plugin:2.5.0:build -Dimage=ppawave/circleci-test:1.0.0
+      - run: mvn clean compile com.google.cloud.tools:jib-maven-plugin:2.5.0:build -Dimage=ppa-ppa-docker-local/circleci-test:1.0.0
 
       # store raw contents of src code
       - store_artifacts:
